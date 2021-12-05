@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="rabbitGame.js" defer></script>
+    <title>Document</title>
+  </head>
+  <style>
+    :root {
+      --light-white: rgb(185, 183, 183);
+      --border-radius: 8px;
+    }
+    body {
+      background-color: black;
+      text-align: center;
+    }
+    #light {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      box-shadow: inset 0 0 150px 150px #000;
+      background: #fff;
+      z-index: 10;
+    }
+
+    .light-off {
+      box-shadow: inset 0 0 150px 250px #000 !important;
+    }
+    h1,
+    h2 {
+      color: var(--light-white);
+    }
+    input {
+      height: 50px;
+      width: 400px;
+      display: inline-block;
+    }
+    button {
+      background-color: var(--light-white);
+      height: 30px;
+      width: 200px;
+    }
+    section {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    section div {
+      border-radius: var(--border-radius);
+      margin: 1rem;
+      height: 100px;
+      width: 100px;
+      background-color: var(--light-white);
+      text-align: center;
+    }
+    article {
+      position: relative;
+    }
+
+    .two {
+      box-shadow: 0 0 10px 1px rgb(68, 68, 68);
+      background-color: black;
+      position: absolute;
+      top: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .fade {
+      opacity: 0;
+    }
+    .permnant-fade {
+      opacity: 0;
+    }
+
+    img {
+      border-radius: var(--border-radius);
+      height: 100px;
+      width: 100px;
+      object-fit: cover;
+    }
+
+    .modal-div {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.26);
+      display: grid;
+      justify-content: center;
+      align-content: center;
+      transition: all ease-in-out 0.5s;
+    }
+    .modal {
+      height: 250px;
+      min-width: 400px;
+      max-width: 600px;
+      box-shadow: 0 0 15px 5px white;
+      background-color: rgba(0, 0, 0, 0.562);
+      display: grid;
+      justify-content: center;
+      align-content: center;
+    }
+    .modal button {
+      margin: auto;
+    }
+    .hide {
+      opacity: 0;
+      z-index: -10;
+    }
+
+    .svg {
+      transform: rotate(120deg);
+    }
+
+    @media only screen and (max-width: 600px) {
+      section div {
+        border-radius: var(--border-radius);
+        margin: 0.5rem;
+        height: 50px;
+        width: 50px;
+        background-color: var(--light-white);
+        text-align: center;
+      }
+      img {
+        border-radius: var(--border-radius);
+        height: 50px;
+        width: 50px;
+        object-fit: cover;
+      }
+    }
+  </style>
+  <body>
+    <!-- https://codepen.io/jedmac/pen/RWQPNb -->
+    <!-- <div id="light"></div> -->
+
+    <h1></h1>
+    <h2></h2>
+    <input
+      type="range"
+      min="4"
+      max="100"
+      value="25"
+      placeholder="Make a guess"
+    />
+
+    <div>
+      <button>AI</button>
+    </div>
+    <section></section>
+    <div class="modal-div hide">
+      <div class="modal">
+        <h2></h2>
+        <button class="again">Start Again</button>
+      </div>
+    </div>
+    <!-- <img class="svg" src="./assets/Flashlight.svg" alt="Flashlight" /> -->
+  </body>
+</html>
