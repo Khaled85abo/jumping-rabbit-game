@@ -1,0 +1,146 @@
+:root {
+  --light-white: rgb(185, 183, 183);
+  --border-radius: 8px;
+  --cursorXpos: 50vw;
+  --cursorYpos: 50vh;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: rgb(27, 27, 27);
+  text-align: center;
+}
+
+h1,
+h2 {
+  color: var(--light-white);
+  margin: 1rem;
+}
+input {
+  height: 50px;
+  width: 400px;
+  display: inline-block;
+}
+button {
+  background-color: var(--light-white);
+  height: 30px;
+  width: 200px;
+  margin: 1rem;
+}
+.section {
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.459);
+  cursor: none;
+}
+.light {
+  position: absolute;
+  pointer-events: none;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1;
+}
+
+.light-circle {
+  background: radial-gradient(
+    circle 5rem at var(--cursorXpos) var(--cursorYpos),
+    rgba(0, 0, 0, 0) 70%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+}
+section {
+  padding: 2rem 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+section div {
+  border-radius: var(--border-radius);
+  margin: 1rem;
+  height: 100px;
+  width: 100px;
+  background-color: var(--light-white);
+  text-align: center;
+}
+article {
+  position: relative;
+}
+
+.two {
+  box-shadow: 0 0 10px 1px rgb(150, 150, 150);
+  background-color: black;
+  position: absolute;
+  top: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.fade {
+  opacity: 0;
+}
+.permnant-fade {
+  opacity: 0;
+}
+
+section img {
+  border-radius: var(--border-radius);
+  height: 100px;
+  width: 100px;
+  object-fit: cover;
+}
+
+.modal-div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.26);
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  transition: all ease-in-out 0.3s;
+}
+.modal {
+  height: 250px;
+  min-width: 400px;
+  max-width: 600px;
+  box-shadow: 0 0 15px 5px white;
+  background-color: rgba(0, 0, 0, 0.562);
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  z-index: 2;
+}
+.modal button {
+  margin: auto;
+}
+.hide {
+  opacity: 0;
+
+  z-index: -1;
+}
+
+.svg {
+  pointer-events: none;
+  height: 50px;
+  width: 50px;
+  transform: rotate(120deg);
+  position: absolute;
+  top: calc(var(--cursorYpos) + 220px);
+  left: calc(var(--cursorXpos) - 20px);
+}
+
+@media only screen and (max-width: 600px) {
+  section div {
+    margin: 0.5rem;
+    height: 50px;
+    width: 50px;
+  }
+  section img {
+    height: 50px;
+    width: 50px;
+  }
+}

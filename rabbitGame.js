@@ -6,6 +6,7 @@ function initState() {
   state.AI = false;
   state.rabbit = "R";
   state.pos;
+  state.rabbitArticle;
 }
 
 function initActions() {
@@ -51,8 +52,9 @@ function startAI() {
   let found = false;
   for (let i = 0; i < len; i = i + 2) {
     if (i == pos) {
-      rabbitFound();
       found = true;
+      renderRabbitPic(i);
+      rabbitFound();
       break;
     }
     rabbitJumps();
@@ -60,6 +62,7 @@ function startAI() {
   if (!found) {
     for (let i = 1; i < len; i = i + 2) {
       if (i == pos) {
+        renderRabbitPic(i);
         rabbitFound();
         found = true;
         break;
@@ -71,7 +74,7 @@ function startAI() {
   !found && rabbitFound("This Rabbit was really hard to find :(");
 }
 
-function rabbitFound(text = "Robot has found it") {
+function rabbitFound(text = "Robot has found it :)") {
   document.querySelector(".modal-div").classList.remove("hide");
   document.querySelector(".modal > h2").innerText = text;
 }
@@ -84,7 +87,7 @@ function renderArticles() {
   for (let i = 0; i < len; i++) {
     const article = document.createElement("article");
     article.innerHTML = `
-        <div class="one"></div>
+        <div class="one"><img src='./assets/empty-room.jpg'/></div>
         <div class="two"></div>
       `;
     articlesActions(article, i);
@@ -93,22 +96,26 @@ function renderArticles() {
 }
 
 function articlesActions(article, i) {
-  article.addEventListener("mouseout", (e) =>
-    article.querySelector(".two").classList.remove("fade")
-  );
-  article.addEventListener("click", () => {
-    article.querySelector(".two").classList.add("fade");
-    if (i == state.pos) {
-      article.querySelector(".one").innerHTML =
-        "<img src='./assets/rabbit.jpg'/>";
-      article.querySelector(".two").classList.add("permnant-fade");
-      rabbitFound("Congratulations you've found it");
-    } else {
-      article.querySelector(".one").innerHTML =
-        "<img src='./assets/empty-room.jpg'/>";
-      rabbitJumps();
-    }
+  article.addEventListener("mouseout", (e) => {
+    article.querySelector(".two").classList.remove("fade");
   });
+  article.addEventListener("click", () => checkRabbitExist(article, i));
+}
+
+function checkRabbitExist(article, i) {
+  article.querySelector(".two").classList.add("fade");
+  if (i == state.pos) {
+    renderRabbitPic(i);
+    rabbitFound("Congratulations you've found it");
+  } else {
+    rabbitJumps();
+  }
+}
+
+function renderRabbitPic(i) {
+  const article = document.querySelectorAll("article")[i];
+  article.querySelector(".one").innerHTML = "<img src='./assets/rabbit.jpg'/>";
+  article.querySelector(".two").classList.add("permnant-fade");
 }
 
 function rabbitJumps() {
@@ -149,28 +156,22 @@ function main() {
 
 main();
 
-//this is a sample flashlight effect
-// $(document).ready(function () {
-//   $(this)
-//     .mousemove(function (e) {
-//       $("#light").css({
-//         top: e.pageY - 250,
-//         left: e.pageX - 250,
-//       });
-//     })
-//     .mousedown(function (e) {
-//       switch (e.which) {
-//         case 1:
-//           $("#light").toggleClass("light-off");
-//           break;
-//         case 2:
-//           console.log("Middle Mouse button pressed.");
-//           break;
-//         case 3:
-//           console.log("Right Mouse button pressed.");
-//           break;
-//         default:
-//           console.log("You have a strange Mouse!");
-//       }
-//     });
-// });
+// https://codepen.io/hippolyte-gobbetti/pen/zYZWmOK
+//https://codepen.io/jedmac/pen/RWQPNb
+
+let lights = true;
+const section = document.querySelector(".section");
+section.addEventListener("mousemove", updatePosition);
+// section.addEventListener("click", toggleLight);
+
+function toggleLight() {
+  lights = !lights;
+  document.querySelector(".light").classList.toggle("light-circle");
+}
+function updatePosition(e) {
+  document.documentElement.style.setProperty("--cursorXpos", `${e.pageX}px`);
+  document.documentElement.style.setProperty(
+    "--cursorYpos",
+    `${e.pageY - 220}px`
+  );
+}
