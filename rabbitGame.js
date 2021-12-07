@@ -7,6 +7,7 @@ function initState() {
   state.rabbit = "R";
   state.pos;
   state.rabbitArticle;
+  state.lights = true;
 }
 
 function initActions() {
@@ -18,6 +19,10 @@ function initActions() {
   modalDiv
     .querySelector("button")
     .addEventListener("click", () => startAgain(modalDiv));
+
+  const section = document.querySelector(".section");
+  section.addEventListener("mousemove", updatePosition);
+  // section.addEventListener("click", toggleLight);
 }
 
 function startAgain(modalDiv) {
@@ -116,6 +121,11 @@ function renderRabbitPic(i) {
   const article = document.querySelectorAll("article")[i];
   article.querySelector(".one").innerHTML = "<img src='./assets/rabbit.jpg'/>";
   article.querySelector(".two").classList.add("permnant-fade");
+  article.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+    inline: "nearest",
+  });
 }
 
 function rabbitJumps() {
@@ -159,13 +169,8 @@ main();
 // https://codepen.io/hippolyte-gobbetti/pen/zYZWmOK
 //https://codepen.io/jedmac/pen/RWQPNb
 
-let lights = true;
-const section = document.querySelector(".section");
-section.addEventListener("mousemove", updatePosition);
-// section.addEventListener("click", toggleLight);
-
 function toggleLight() {
-  lights = !lights;
+  state.lights = !state.lights;
   document.querySelector(".light").classList.toggle("light-circle");
 }
 function updatePosition(e) {
