@@ -1,3 +1,11 @@
+/**
+ *
+ * Model Logic
+ *
+ */
+
+//#region
+
 const state = {};
 
 function initState() {
@@ -10,56 +18,20 @@ function initState() {
   state.lights = true;
 }
 
-function initActions() {
-  document.querySelector("input").addEventListener("input", renderRange);
-  document
-    .querySelector("button:first-of-type")
-    .addEventListener("click", startAI);
-  const modalDiv = document.querySelector(".modal-div");
-  modalDiv
-    .querySelector("button")
-    .addEventListener("click", () => startAgain(modalDiv));
-
-  const section = document.querySelector(".section");
-  section.addEventListener("mousemove", updatePosition);
-  // section.addEventListener("click", toggleLight);
-}
-
 function startAgain(modalDiv) {
   state.AI = false;
   modalDiv.classList.add("hide");
   renderRange();
 }
 
-function renderRange() {
-  const value = document.querySelector("input").value;
-  state.len = value;
-  state.pos = Math.floor(Math.random() * value);
-  let level =
-    value > 3 && value < 15
-      ? "easy"
-      : value > 15 && value < 30
-      ? "moderate"
-      : value > 30 && value < 60
-      ? "hard"
-      : value > 60 && value < 80
-      ? "very had"
-      : "impossible";
-
-  document.querySelector("h2").innerText = level;
-  document.querySelector("h1").innerText = `${value} boxes`;
-  createVirtualBoxes();
-  renderArticles();
-}
-
-function startAI() {
+function StartRobotGamer() {
   const { len, pos } = state;
   let found = false;
   for (let i = 0; i < len; i = i + 2) {
     if (i == pos) {
       found = true;
       renderRabbitPic(i);
-      rabbitFound();
+      showGameEndModal();
       break;
     }
     rabbitJumps();
@@ -68,7 +40,7 @@ function startAI() {
     for (let i = 1; i < len; i = i + 2) {
       if (i == pos) {
         renderRabbitPic(i);
-        rabbitFound();
+        showGameEndModal();
         found = true;
         break;
       }
@@ -76,56 +48,17 @@ function startAI() {
     }
   }
 
-  !found && rabbitFound("This Rabbit was really hard to find :(");
+  !found && showGameEndModal("This Rabbit was really hard to find :(");
 }
 
-function rabbitFound(text = "Robot has found it :)") {
-  document.querySelector(".modal-div").classList.remove("hide");
-  document.querySelector(".modal > h2").innerText = text;
-}
-
-function renderArticles() {
-  const { len } = state;
-  const section = document.querySelector("section");
-  section.innerHTML = "";
-
-  for (let i = 0; i < len; i++) {
-    const article = document.createElement("article");
-    article.innerHTML = `
-        <div class="one"><img src='./assets/empty-room.jpg'/></div>
-        <div class="two"></div>
-      `;
-    articlesActions(article, i);
-    section.appendChild(article);
-  }
-}
-
-function articlesActions(article, i) {
-  article.addEventListener("mouseout", (e) => {
-    article.querySelector(".two").classList.remove("fade");
-  });
-  article.addEventListener("click", () => checkRabbitExist(article, i));
-}
-
-function checkRabbitExist(article, i) {
+function checkIfRabbitExists(article, i) {
   article.querySelector(".two").classList.add("fade");
   if (i == state.pos) {
     renderRabbitPic(i);
-    rabbitFound("Congratulations you've found it");
+    showGameEndModal("Congratulations you've found it");
   } else {
     rabbitJumps();
   }
-}
-
-function renderRabbitPic(i) {
-  const article = document.querySelectorAll("article")[i];
-  article.querySelector(".one").innerHTML = "<img src='./assets/rabbit.jpg'/>";
-  article.querySelector(".two").classList.add("permnant-fade");
-  article.scrollIntoView({
-    behavior: "smooth",
-    block: "start",
-    inline: "nearest",
-  });
 }
 
 function rabbitJumps() {
@@ -158,13 +91,98 @@ function createVirtualBoxes() {
   }
   console.log(gaps);
 }
-function main() {
-  initState();
-  renderRange();
-  initActions();
+
+//#endregion
+
+/**
+ *
+ * Controller Logic
+ *
+ */
+//#region
+
+function initActions() {
+  document.querySelector("input").addEventListener("input", renderRange);
+  document
+    .querySelector("button:first-of-type")
+    .addEventListener("click", StartRobotGamer);
+  const modalDiv = document.querySelector(".modal-div");
+  modalDiv
+    .querySelector("button")
+    .addEventListener("click", () => startAgain(modalDiv));
+
+  const section = document.querySelector(".section");
+  section.addEventListener("mousemove", updatePosition);
+  // section.addEventListener("click", toggleLight);
 }
 
-main();
+function articlesActions(article, i) {
+  article.addEventListener("mouseout", (e) => {
+    article.querySelector(".two").classList.remove("fade");
+  });
+  article.addEventListener("click", () => checkIfRabbitExists(article, i));
+}
+//#endregion
+
+/**
+ *
+ * View Logic
+ *
+ */
+
+//#region
+function renderRange() {
+  const value = document.querySelector("input").value;
+  state.len = value;
+  state.pos = Math.floor(Math.random() * value);
+  let level =
+    value > 3 && value < 15
+      ? "easy"
+      : value > 15 && value < 30
+      ? "moderate"
+      : value > 30 && value < 60
+      ? "hard"
+      : value > 60 && value < 80
+      ? "very had"
+      : "impossible";
+
+  document.querySelector("h1").innerText = level;
+  document.querySelector("h2").innerText = `${value} boxes`;
+  createVirtualBoxes();
+  renderDomBoxes();
+}
+
+function showGameEndModal(text = "Robot has found it :)") {
+  document.querySelector(".modal-div").classList.remove("hide");
+  document.querySelector(".modal > h2").innerText = text;
+}
+
+function renderDomBoxes() {
+  const { len } = state;
+  const section = document.querySelector("section");
+  section.innerHTML = "";
+
+  for (let i = 0; i < len; i++) {
+    const article = document.createElement("article");
+    article.innerHTML = `
+        <div class="one"><img src='./assets/empty-room.jpg'/></div>
+        <div class="two"></div>
+      `;
+    articlesActions(article, i);
+    section.appendChild(article);
+  }
+}
+
+function renderRabbitPic(i) {
+  const article = document.querySelectorAll("article")[i];
+  article.querySelector(".one").innerHTML = "<img src='./assets/rabbit.jpg'/>";
+  article.querySelector(".two").classList.add("permnant-fade");
+  article.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+    inline: "nearest",
+  });
+}
 
 // https://codepen.io/hippolyte-gobbetti/pen/zYZWmOK
 //https://codepen.io/jedmac/pen/RWQPNb
@@ -173,6 +191,7 @@ function toggleLight() {
   state.lights = !state.lights;
   document.querySelector(".light").classList.toggle("light-circle");
 }
+
 function updatePosition(e) {
   document.documentElement.style.setProperty("--cursorXpos", `${e.pageX}px`);
   document.documentElement.style.setProperty(
@@ -180,3 +199,21 @@ function updatePosition(e) {
     `${e.pageY - 220}px`
   );
 }
+
+//#endregion
+
+/**
+ *
+ * Entry point
+ *
+ */
+//#region
+
+function main() {
+  initState();
+  renderRange();
+  initActions();
+}
+
+main();
+//#endregion
