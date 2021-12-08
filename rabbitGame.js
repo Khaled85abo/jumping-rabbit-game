@@ -197,10 +197,10 @@ function showModal(text = "Robot has found it :)", type) {
         <ul>
         <li>The rabbit is in one of the boxes below.</li>
         <li>If you find the rabbit the game is over.</li>
-        <li>But if you don't then the rabbit will jump forwards or backwards.</li>
+        <li>But if you don't then the rabbit will jump forward or backward.</li>
         <li>the rabbit can only jump one box at a time.</li>
-        <li>If the rabbit is in the last box, then it can only jump backwards.</li>
-        <li>If the rabbit is in the first box, then it can only jump forwards.</li>
+        <li>If the rabbit is in the last box, then it can only jump backward.</li>
+        <li>If the rabbit is in the first box, then it can only jump forward.</li>
         </ul>
         <button data-btn-type='info'>Play</button>
       `;
