@@ -6,6 +6,8 @@
 
 //#region
 
+// The model should not communicate with view at all.
+
 const state = {};
 
 function initState() {
@@ -14,15 +16,9 @@ function initState() {
   state.AI = false;
   state.rabbit = "R";
   state.pos;
+  state.level;
   state.rabbitArticle;
   state.lights = true;
-}
-
-// When Games ends, this function will reset everything to its initial state.
-function startAgain(modalDiv) {
-  state.AI = false;
-  modalDiv.classList.add("hide");
-  renderRange();
 }
 
 // letting Robot player play to find the rabbit
@@ -33,7 +29,7 @@ function StartRobotGamer() {
     if (i == pos) {
       found = true;
       renderRabbitPic(i);
-      showGameEndModal();
+      showModal();
       break;
     }
     rabbitJumps();
@@ -42,7 +38,7 @@ function StartRobotGamer() {
     for (let i = 1; i < len; i = i + 2) {
       if (i == pos) {
         renderRabbitPic(i);
-        showGameEndModal();
+        showModal();
         found = true;
         break;
       }
@@ -50,18 +46,7 @@ function StartRobotGamer() {
     }
   }
 
-  !found && showGameEndModal("This Rabbit was really hard to find :(");
-}
-
-// Checking if rabbit exists in a box which the player has clicked on.
-function checkIfRabbitExists(article, i) {
-  article.querySelector(".two").classList.add("fade");
-  if (i == state.pos) {
-    renderRabbitPic(i);
-    showGameEndModal("Congratulations you've found it");
-  } else {
-    rabbitJumps();
-  }
+  !found && showModal("This Rabbit was really hard to find :(");
 }
 
 // moving the rabbit randomly forward or backward after a failed attempt to find the rabbit.
@@ -112,14 +97,27 @@ function initActions() {
   document.querySelector("input").addEventListener("input", renderRange);
   document.querySelector(".robot").addEventListener("click", StartRobotGamer);
 
-  const modalDiv = document.querySelector(".modal-div");
-  modalDiv
-    .querySelector("button")
-    .addEventListener("click", () => startAgain(modalDiv));
-
   const section = document.querySelector(".section");
   section.addEventListener("mousemove", updatePosition);
   // section.addEventListener("click", toggleLight);
+
+  document
+    .querySelector(".hint")
+    .addEventListener("click", () => showModal("text", "hint"));
+  document
+    .querySelector(".how-to-play")
+    .addEventListener("click", () => showModal("text", "info"));
+}
+
+// Checking if rabbit exists in a box which the player has clicked on.
+function checkIfRabbitExists(article, i) {
+  article.querySelector(".two").classList.add("fade");
+  if (i == state.pos) {
+    renderRabbitPic(i);
+    showModal("Congratulations you've found it");
+  } else {
+    rabbitJumps();
+  }
 }
 
 // Adding event listeners to DOM boxes after they are created.
@@ -128,6 +126,22 @@ function articlesActions(article, i) {
     article.querySelector(".two").classList.remove("fade");
   });
   article.addEventListener("click", () => checkIfRabbitExists(article, i));
+}
+
+function initModalBtnAction() {
+  document.querySelector(".modal button").addEventListener("click", (e) => {
+    document.querySelector(".light").classList.remove("display-none");
+    document.querySelector(".modal-div").classList.add("hide");
+    document.querySelector(".svg").classList.remove("hide");
+
+    if (e.target.dataset.btnType == "again") {
+      state.AI = false;
+      renderRange();
+    }
+    if (e.target.dataset.btnType == "hint") {
+      showHint();
+    }
+  });
 }
 //#endregion
 
@@ -157,6 +171,8 @@ function renderRange() {
       ? "very had"
       : "impossible";
 
+  state.level = level;
+  document.querySelector(".hint").disabled = level == "easy" ? true : false;
   document.querySelector("h1").innerText = level;
   document.querySelector("h2").innerText = `${value} boxes`;
   createVirtualBoxes();
@@ -165,9 +181,72 @@ function renderRange() {
 
 // Show end game modal wit a success message when the rabbit is found by the user or the robot.
 // or show a fail message when the Robot fails to find the rabbit.
-function showGameEndModal(text = "Robot has found it :)") {
+function showModal(text = "Robot has found it :)", type) {
   document.querySelector(".modal-div").classList.remove("hide");
-  document.querySelector(".modal > h2").innerText = text;
+
+  const modal = document.querySelector(".modal");
+  modal.classList.add("solid-background");
+  document.querySelector(".svg").classList.add("hide");
+  document.querySelector(".light").classList.add("display-none");
+  let content;
+
+  switch (type) {
+    case "info":
+      content = `
+        <h2>A rabbit has been lost, Help us find it!</h2>
+        <ul>
+        <li>The rabbit is in one of the boxes below.</li>
+        <li>If you find the rabbit the game is over.</li>
+        <li>But if you don't then the rabbit will jump forwards or backwards.</li>
+        <li>the rabbit can only jump one box at a time.</li>
+        <li>If the rabbit is in the last box, then it can only jump backwards.</li>
+        <li>If the rabbit is in the first box, then it can only jump forwards.</li>
+        </ul>
+        <button data-btn-type='info'>Play</button>
+      `;
+      break;
+    case "hint":
+      content = `
+        <h2>The rabbit will be in one of the 10 boxes that will be highlighted.</h2>
+        <button data-btn-type='hint'>Go</button>
+        `;
+      break;
+    default:
+      content = `
+        <h2>${text}</h2>
+        <button data-btn-type='again'>Start Again</button>
+      `;
+      modal.classList.remove("solid-background");
+  }
+
+  document.querySelector(".modal").innerHTML = content;
+  initModalBtnAction();
+}
+
+function showHint() {
+  const articles = document.querySelectorAll(".two");
+
+  for (let i = 0; i < state.len; i++) {
+    articles[i].classList.remove("highlighted-article");
+  }
+
+  const newPos = Math.floor(Math.random() * 10);
+  const indexDifference = 10 - newPos;
+  let firstIndex = state.pos - newPos;
+  let lastIndex = state.pos + indexDifference;
+
+  if (firstIndex < 0) {
+    firstIndex = 0;
+    lastIndex = 10;
+  } else if (lastIndex > state.len - 1) {
+    lastIndex = state.len - 1;
+    firstIndex = lastIndex - 10;
+  }
+
+  for (let i = firstIndex; i <= lastIndex; i++) {
+    articles[i].classList.add("highlighted-article");
+  }
+  articles[firstIndex].scrollIntoView({ behavior: "smooth" });
 }
 
 // Rendering DOM boxes according to the number provided by the user or the initial value of input which is 25.
@@ -198,6 +277,7 @@ function renderRabbitPic(i) {
     inline: "nearest",
   });
 }
+
 /**
  *
  * flash lights projects links.

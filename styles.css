@@ -27,6 +27,8 @@ input {
 }
 button {
   background-color: var(--light-white);
+  border-radius: 4px;
+
   height: 30px;
   width: 200px;
   margin: 1rem;
@@ -78,6 +80,10 @@ article {
   transition: opacity 0.2s ease-in-out;
 }
 
+.highlighted-article {
+  box-shadow: 0 0 10px 1px rgb(122, 253, 0);
+}
+
 .fade {
   opacity: 0;
 }
@@ -105,18 +111,31 @@ section img {
   transition: all ease-in-out 0.3s;
 }
 .modal {
-  height: 250px;
+  color: var(--light-white);
+  min-height: 250px;
   min-width: 400px;
   max-width: 600px;
   box-shadow: 0 0 15px 5px white;
-  background-color: rgba(0, 0, 0, 0.562);
+  background-color: rgba(0, 0, 0, 0.5);
   display: grid;
   justify-content: center;
   align-content: center;
   z-index: 2;
 }
+
+.solid-background {
+  background-color: black;
+}
+.modal * {
+  margin: 1rem;
+}
+.modal ul {
+  text-align: left;
+  font-size: 1.1rem;
+  letter-spacing: 2.5px;
+}
 .modal button {
-  margin: auto;
+  margin: 1rem auto;
 }
 .hide {
   opacity: 0;
@@ -132,6 +151,10 @@ section img {
   position: absolute;
   top: calc(var(--cursorYpos) + 320px);
   left: calc(var(--cursorXpos) - 20px);
+}
+
+.display-none {
+  display: none;
 }
 
 @media only screen and (max-width: 600px) {
