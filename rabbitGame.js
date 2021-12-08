@@ -248,7 +248,6 @@ function showHint() {
   }
   articles[firstIndex].scrollIntoView({ behavior: "smooth" });
 }
-
 // Rendering DOM boxes according to the number provided by the user or the initial value of input which is 25.
 function renderDomBoxes() {
   const { len } = state;
@@ -294,11 +293,39 @@ function toggleLight() {
 
 // Updating positions x and y css variables according to user's mouse position in the boxes section.
 function updatePosition(e) {
-  document.documentElement.style.setProperty("--cursorXpos", `${e.pageX}px`);
+  const svg = document.querySelector(".svg");
+  // count the Height of DOM elements, counting will be counted but not used because there are no element to the left of the container
+  let parentElementWidth = 0;
+  let parentElementHeight = 0;
+  let parentElement = document.querySelector(".light");
+  while (parentElement) {
+    parentElementHeight +=
+      parentElement.offsetTop -
+      parentElement.scrollTop +
+      parentElement.clientTop;
+
+    parentElementWidth +=
+      parentElement.offsetLeft -
+      parentElement.scrollLeft +
+      parentElement.clientLeft;
+
+    parentElement = parentElement.offsetParent;
+  }
+
+  document.documentElement.style.setProperty(
+    "--cursorXpos",
+    `${e.pageX - parentElementWidth}px`
+  );
   document.documentElement.style.setProperty(
     "--cursorYpos",
-    `${e.pageY - 320}px`
+    `${e.pageY - parentElementHeight}px`
   );
+
+  document.documentElement.style.setProperty(
+    "--cursorXposSVG",
+    `${e.pageX - svg.offsetWidth / 2}px`
+  );
+  document.documentElement.style.setProperty("--cursorYposSVG", `${e.pageY}px`);
 }
 
 //#endregion
