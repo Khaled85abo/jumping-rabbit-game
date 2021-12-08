@@ -15,7 +15,8 @@ body {
 }
 
 h1,
-h2 {
+h2,
+h3 {
   color: var(--light-white);
   margin: 1rem 0 0 0;
 }
@@ -129,7 +130,7 @@ section img {
   width: 50px;
   transform: rotate(120deg);
   position: absolute;
-  top: calc(var(--cursorYpos) + 220px);
+  top: calc(var(--cursorYpos) + 320px);
   left: calc(var(--cursorXpos) - 20px);
 }
 

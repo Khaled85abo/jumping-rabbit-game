@@ -18,12 +18,14 @@ function initState() {
   state.lights = true;
 }
 
+// When Games ends, this function will reset everything to its initial state.
 function startAgain(modalDiv) {
   state.AI = false;
   modalDiv.classList.add("hide");
   renderRange();
 }
 
+// letting Robot player play to find the rabbit
 function StartRobotGamer() {
   const { len, pos } = state;
   let found = false;
@@ -51,6 +53,7 @@ function StartRobotGamer() {
   !found && showGameEndModal("This Rabbit was really hard to find :(");
 }
 
+// Checking if rabbit exists in a box which the player has clicked on.
 function checkIfRabbitExists(article, i) {
   article.querySelector(".two").classList.add("fade");
   if (i == state.pos) {
@@ -61,6 +64,7 @@ function checkIfRabbitExists(article, i) {
   }
 }
 
+// moving the rabbit randomly forward or backward after a failed attempt to find the rabbit.
 function rabbitJumps() {
   // destrcturing object to get variables, mutating variables will not mutate the object
   let { pos, len } = state;
@@ -78,6 +82,8 @@ function rabbitJumps() {
   createVirtualBoxes();
 }
 
+// Creating a array with a (rabbit) inside, the array has the same length as the DOM boxes.
+// when a user clicks on a DOM box, it's index is used to check if the rabbit exists in the array.
 function createVirtualBoxes() {
   let { len, pos, rabbit, gaps } = state;
   console.log("position in create boxes:", pos);
@@ -101,11 +107,11 @@ function createVirtualBoxes() {
  */
 //#region
 
+// Listening to user changing input range, restarting the game and moving the mouse in the boxes section.
 function initActions() {
   document.querySelector("input").addEventListener("input", renderRange);
-  document
-    .querySelector("button:first-of-type")
-    .addEventListener("click", StartRobotGamer);
+  document.querySelector(".robot").addEventListener("click", StartRobotGamer);
+
   const modalDiv = document.querySelector(".modal-div");
   modalDiv
     .querySelector("button")
@@ -116,6 +122,7 @@ function initActions() {
   // section.addEventListener("click", toggleLight);
 }
 
+// Adding event listeners to DOM boxes after they are created.
 function articlesActions(article, i) {
   article.addEventListener("mouseout", (e) => {
     article.querySelector(".two").classList.remove("fade");
@@ -131,6 +138,10 @@ function articlesActions(article, i) {
  */
 
 //#region
+
+// Change the DOM and array length according to user's input,
+// then calling the functions to create them providing a new start position for the rabbit in the virtual boxes.
+// Rendering game level and boxes number according to number of boxes
 function renderRange() {
   const value = document.querySelector("input").value;
   state.len = value;
@@ -152,11 +163,14 @@ function renderRange() {
   renderDomBoxes();
 }
 
+// Show end game modal wit a success message when the rabbit is found by the user or the robot.
+// or show a fail message when the Robot fails to find the rabbit.
 function showGameEndModal(text = "Robot has found it :)") {
   document.querySelector(".modal-div").classList.remove("hide");
   document.querySelector(".modal > h2").innerText = text;
 }
 
+// Rendering DOM boxes according to the number provided by the user or the initial value of input which is 25.
 function renderDomBoxes() {
   const { len } = state;
   const section = document.querySelector("section");
@@ -173,6 +187,7 @@ function renderDomBoxes() {
   }
 }
 
+// Rendering a rabbit picture when the index of the DOM box clicked by the user matches the index of the virtual array that has the rabbit.
 function renderRabbitPic(i) {
   const article = document.querySelectorAll("article")[i];
   article.querySelector(".one").innerHTML = "<img src='./assets/rabbit.jpg'/>";
@@ -183,20 +198,26 @@ function renderRabbitPic(i) {
     inline: "nearest",
   });
 }
+/**
+ *
+ * flash lights projects links.
+ * https://codepen.io/hippolyte-gobbetti/pen/zYZWmOK
+ * https://codepen.io/jedmac/pen/RWQPNb
+ * https://www.youtube.com/watch?v=y1Avl1CscnM
+ */
 
-// https://codepen.io/hippolyte-gobbetti/pen/zYZWmOK
-//https://codepen.io/jedmac/pen/RWQPNb
-
+// NOT IN USE
 function toggleLight() {
   state.lights = !state.lights;
   document.querySelector(".light").classList.toggle("light-circle");
 }
 
+// Updating positions x and y css variables according to user's mouse position in the boxes section.
 function updatePosition(e) {
   document.documentElement.style.setProperty("--cursorXpos", `${e.pageX}px`);
   document.documentElement.style.setProperty(
     "--cursorYpos",
-    `${e.pageY - 220}px`
+    `${e.pageY - 320}px`
   );
 }
 
