@@ -167,4 +167,13 @@ section img {
     height: 50px;
     width: 50px;
   }
+  .section {
+    cursor: auto;
+  }
+  .light {
+    display: none;
+  }
+  .svg {
+    display: none;
+  }
 }
