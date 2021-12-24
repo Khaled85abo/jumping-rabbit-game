@@ -16,7 +16,6 @@ function initState() {
   state.AI = false;
   state.rabbit = "R";
   state.pos;
-  state.level;
   state.rabbitArticle;
   state.lights = true;
 }
@@ -64,23 +63,6 @@ function rabbitJumps() {
   // Binding the object with the current value
   state.pos = pos;
   console.log("position in jumping", state.pos);
-  createVirtualBoxes();
-}
-
-// Creating a array with a (rabbit) inside, the array has the same length as the DOM boxes.
-// when a user clicks on a DOM box, it's index is used to check if the rabbit exists in the array.
-function createVirtualBoxes() {
-  let { len, pos, rabbit, gaps } = state;
-  console.log("position in create boxes:", pos);
-  gaps = [];
-  for (let i = 0; i < len; i++) {
-    if (i == pos) {
-      gaps.push(rabbit);
-    } else {
-      gaps.push(i);
-    }
-  }
-  console.log(gaps);
 }
 
 //#endregion
@@ -161,7 +143,7 @@ function renderRange() {
   state.len = value;
   state.pos = Math.floor(Math.random() * value);
   let level =
-    value > 3 && value < 15
+    value > 3 && value < 16
       ? "easy"
       : value > 15 && value < 30
       ? "moderate"
@@ -171,11 +153,9 @@ function renderRange() {
       ? "very had"
       : "impossible";
 
-  state.level = level;
-  document.querySelector(".hint").disabled = level == "easy" ? true : false;
+  document.querySelector(".hint").disabled = level == "easy";
   document.querySelector("h1").innerText = level;
   document.querySelector("h2").innerText = `${value} boxes`;
-  createVirtualBoxes();
   renderDomBoxes();
 }
 
